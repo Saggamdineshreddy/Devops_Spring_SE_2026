@@ -3,10 +3,24 @@ import sys
 
 def validate(values):
     errors = []
-    # TODO: APP_PORT must be an integer in 1024..65535.
-    # TODO: DEBUG must be false, DB_HOST and DB_PASSWORD must be nonempty.
-    # Return useful errors naming keys, not secret values.
-    raise NotImplementedError("Complete the configuration contract")
+    port_text = values.get("APP_PORT", "")
+    try:
+        port = int(port_text)
+        if not 1024 <= port <= 65535:
+            errors.append("APP_PORT must be a whole number between 1024 and 65535")
+    except (TypeError, ValueError):
+        errors.append("APP_PORT must be a whole number between 1024 and 65535")
+
+    if values.get("DEBUG", "") != "false":
+        errors.append("DEBUG must be exactly 'false'")
+
+    if not values.get("DB_HOST", ""):
+        errors.append("DB_HOST must be present and nonempty")
+
+    if not values.get("DB_PASSWORD", ""):
+        errors.append("DB_PASSWORD must be present and nonempty")
+
+    return errors
 
 def load(path):
     values = {}
